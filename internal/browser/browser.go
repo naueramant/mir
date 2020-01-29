@@ -8,13 +8,13 @@ import (
 )
 
 type Browser struct {
-	Context context.Context
+	Context *context.Context
 }
 
 func NewBrowser() *Browser {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("headless", false),
-		chromedp.Flag("disable-gpu", false),
+		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("enable-automation", false),
 		chromedp.Flag("disable-extensions", true),
 		chromedp.Flag("start-fullscreen", true),
@@ -23,10 +23,17 @@ func NewBrowser() *Browser {
 
 	allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
 
-	// create context
-	ctx, _ := chromedp.NewContext(allocCtx, chromedp.WithLogf(log.Printf))
-
 	return &Browser{
-		Context: ctx,
+		Context: &allocCtx,
+	}
+}
+
+func (b *Browser) NewTab(c TabConfig) *Tab {
+	ctx, _ := chromedp.NewContext(*b.Context, chromedp.WithLogf(log.Printf))
+
+	chromedp.Run(ctx, chromedp.Navigate("www.google.com"))
+
+	return &Tab{
+		Context: &ctx,
 	}
 }

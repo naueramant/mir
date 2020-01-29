@@ -12,28 +12,22 @@ tabs:
     js: scripts.js
 
 jobs:
-  - type: system
-    action: turn_off_screen
-    when: 5 4 * * *
-  - type: system
-    action: turn_on_screen
-    when: 5 4 * * *
-  - type: system
-    action: restart
+  - action: system_turn_off_screen
     when: 5 4 * * *
 
-  - type: utils
-    action: flash_message
+  - action: system_turn_on_screen
     when: 5 4 * * *
-    message: Frokost!
-    duration: 60
-  - type: utils
-    action: command
-    when: 5 4 * * *
-    command: ./script.sh
 
-api:
-  - path: play
-    type: utils
-    action: command
-    cmd: omxplayer ?
+  - action: system_restart
+    when: 5 4 * * *
+
+  - action: util_flash_message
+    when: 5 4 * * *
+    data:
+      message: Frokost!
+      duration: 60
+
+  - action: system_command
+    when: 5 4 * * *
+    data:
+      command: ./script.sh

@@ -1,10 +1,6 @@
 package browser
 
-import (
-	"log"
-
-	"github.com/chromedp/chromedp"
-)
+import "fmt"
 
 var (
 	browser *Browser
@@ -12,12 +8,9 @@ var (
 
 func StartManager() {
 	browser = NewBrowser()
+	tab := browser.NewTab(TabConfig{})
 
-	if err := chromedp.Run(browser.Context,
-		chromedp.Navigate(`https://www.xkcd.com/`),
-	); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(tab)
 
 	for true {
 
