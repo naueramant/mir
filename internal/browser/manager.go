@@ -16,7 +16,12 @@ type BrowserManager struct {
 func (bm *BrowserManager) Start(c *config.Configuration) {
 	bm.Browser = newBrowser()
 
-	if c == nil || len(c.Tabs) == 0 {
+	if c == nil {
+		bm.showNoConfigScreen()
+		return
+	}
+
+	if len(c.Tabs) == 0 {
 		bm.showNoTabsScreen()
 		return
 	}
@@ -44,6 +49,11 @@ func (bm *BrowserManager) Stop() {
 func (bm *BrowserManager) showNoTabsScreen() {
 	t := bm.Browser.NewTab()
 	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/notabs.html?ip=" + utils.GetLocalIp())
+}
+
+func (bm *BrowserManager) showNoConfigScreen() {
+	t := bm.Browser.NewTab()
+	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/noconfig.html?ip=" + utils.GetLocalIp())
 }
 
 func (bm *BrowserManager) startCycle(c *config.Configuration) {

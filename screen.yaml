@@ -1,10 +1,7 @@
 syntax: v1
 tabs: 
-  - url: https://traefik.tyilo.com/
-    duration: 2000
-    auth:
-      username: nauer
-      password: arrowjts
+  - url: https://google.com/
+    duration: 10
   - url: https://www.unixtimestamp.com/
     reload: true
-    duration: 2000
+    duration: 10
