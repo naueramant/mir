@@ -1,0 +1,13 @@
+module github.com/naueramant/mir
+
+go 1.13
+
+require (
+	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
+	github.com/chromedp/cdproto v0.0.0-20200127141643-96201809f07b // indirect
+	github.com/chromedp/chromedp v0.5.3
+	github.com/grandcat/zeroconf v0.0.0-20190424104450-85eadb44205c
+	github.com/miekg/dns v1.1.27 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
+)

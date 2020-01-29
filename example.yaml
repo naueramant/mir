@@ -1,0 +1,39 @@
+syntax: v1
+name: Screen 1
+
+tabs:
+  - url: https://xkcd.com/
+    duration: 300
+    reload: false
+    auth:
+      username: asd
+      password: asd
+    css: style.css
+    js: scripts.js
+
+jobs:
+  - type: system
+    action: turn_off_screen
+    when: 5 4 * * *
+  - type: system
+    action: turn_on_screen
+    when: 5 4 * * *
+  - type: system
+    action: restart
+    when: 5 4 * * *
+
+  - type: utils
+    action: flash_message
+    when: 5 4 * * *
+    message: Frokost!
+    duration: 60
+  - type: utils
+    action: command
+    when: 5 4 * * *
+    command: ./script.sh
+
+api:
+  - path: play
+    type: utils
+    action: command
+    cmd: omxplayer ?
