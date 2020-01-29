@@ -37,11 +37,16 @@ func (t *Tab) NavigateWithBasicAuth(url string, creds BasicAuthCredentials) {
 	x := base64.StdEncoding.EncodeToString([]byte(creds.Username + ":" + creds.Password))
 	headers := network.Headers{"Authorization": "Basic " + x}
 
-	tasks := chromedp.Tasks{
-		network.Enable(),
+	chromedp.Run(t.Context, network.Enable(),
 		network.SetExtraHTTPHeaders(network.Headers(headers)),
 		chromedp.Navigate(url),
-	}
+	)
+}
 
-	chromedp.Run(t.Context, tasks)
+func (t *Tab) AddCSS(css string) {
+
+}
+
+func (t *Tab) AddJS(js string) {
+
 }
