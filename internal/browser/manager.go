@@ -1,16 +1,15 @@
 package browser
 
-import "fmt"
-
 var (
-	browser *Browser
+	browser Browser
 )
 
 func StartManager() {
 	browser = NewBrowser()
-	tab := browser.NewTab(TabConfig{})
 
-	fmt.Println(tab)
+	t := browser.NewTab()
+
+	t.Navigate("https://google.com")
 
 	for true {
 

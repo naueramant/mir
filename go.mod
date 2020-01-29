@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/chromedp/cdproto v0.0.0-20200127141643-96201809f07b // indirect
+	github.com/chromedp/cdproto v0.0.0-20200127141643-96201809f07b
 	github.com/chromedp/chromedp v0.5.3
 	github.com/grandcat/zeroconf v0.0.0-20190424104450-85eadb44205c
 	github.com/miekg/dns v1.1.27 // indirect

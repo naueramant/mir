@@ -8,32 +8,52 @@ import (
 )
 
 type Browser struct {
-	Context *context.Context
+	Context context.Context
+	Tabs    []Tab
+
+	Close func()
 }
 
-func NewBrowser() *Browser {
+func NewBrowser() Browser {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("headless", false),
-		chromedp.Flag("disable-gpu", true),
 		chromedp.Flag("enable-automation", false),
 		chromedp.Flag("disable-extensions", true),
 		chromedp.Flag("start-fullscreen", true),
 		chromedp.Flag("disable-infobars", true),
 	)
 
-	allocCtx, _ := chromedp.NewExecAllocator(context.Background(), opts...)
+	allocCtx, close := chromedp.NewExecAllocator(context.Background(), opts...)
 
-	return &Browser{
-		Context: &allocCtx,
+	return Browser{
+		Context: allocCtx,
+		Close:   close,
 	}
 }
 
-func (b *Browser) NewTab(c TabConfig) *Tab {
-	ctx, _ := chromedp.NewContext(*b.Context, chromedp.WithLogf(log.Printf))
+func (b *Browser) NewTab() Tab {
+	ctx, close := chromedp.NewContext(b.Context, chromedp.WithLogf(log.Printf))
 
-	chromedp.Run(ctx, chromedp.Navigate("www.google.com"))
+	t := Tab{
+		Browser: *b,
+		Context: ctx,
+	}
 
-	return &Tab{
-		Context: &ctx,
+	t.Close = func() {
+		b.removeTab(t)
+		close()
+	}
+
+	b.Tabs = append(b.Tabs, t)
+
+	return t
+}
+
+func (b *Browser) removeTab(t Tab) {
+	for i, tab := range b.Tabs {
+		if tab.Context == t.Context {
+			b.Tabs = append(b.Tabs[:i], b.Tabs[i+1:]...)
+			return
+		}
 	}
 }
