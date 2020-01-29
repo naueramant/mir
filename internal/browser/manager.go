@@ -1,8 +1,13 @@
 package browser
 
-import "github.com/naueramant/mir/internal/config"
+import (
+	"strconv"
+	"time"
 
-import "time"
+	"github.com/naueramant/mir/internal/config"
+	"github.com/naueramant/mir/internal/server"
+	"github.com/naueramant/mir/internal/utils"
+)
 
 type BrowserManager struct {
 	Browser Browser
@@ -11,12 +16,7 @@ type BrowserManager struct {
 func (bm *BrowserManager) Start(c *config.Configuration) {
 	bm.Browser = newBrowser()
 
-	if c == nil {
-		bm.showNoValidConfigurationScreen()
-		return
-	}
-
-	if len(c.Tabs) == 0 {
+	if c == nil || len(c.Tabs) == 0 {
 		bm.showNoTabsScreen()
 		return
 	}
@@ -41,12 +41,9 @@ func (bm *BrowserManager) Stop() {
 	bm.Browser.Close()
 }
 
-func (bm *BrowserManager) showNoValidConfigurationScreen() {
-
-}
-
 func (bm *BrowserManager) showNoTabsScreen() {
-
+	t := bm.Browser.NewTab()
+	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/notabs.html?ip=" + utils.GetLocalIp())
 }
 
 func (bm *BrowserManager) startCycle(c *config.Configuration) {

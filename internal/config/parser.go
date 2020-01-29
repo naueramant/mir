@@ -2,13 +2,13 @@ package config
 
 import (
 	"errors"
-	yaml "gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
-	Filename = "screens.yaml"
+	Filename = "screen.yaml"
 )
 
 func Load() (*Configuration, error) {
@@ -31,11 +31,4 @@ func readFromFile(path string) (*Configuration, error) {
 	err = Validate(t)
 
 	return &t, err
-}
-
-func Exists() bool {
-	if _, err := os.Stat(Filename); os.IsNotExist(err) {
-		return false
-	}
-	return true
 }

@@ -6,10 +6,12 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/naueramant/mir/internal/browser"
 	"github.com/naueramant/mir/internal/config"
+	"github.com/naueramant/mir/internal/server"
 	"github.com/radovskyb/watcher"
 )
 
 func main() {
+	go server.Start()
 
 	w := watcher.New()
 
