@@ -6,6 +6,7 @@
 - [ ] Custom CSS
 - [ ] Custom JS 
 - [ ] Auto refresh if page did not load
+- [ ] Client commands
 - [ ] Job scheduling
 - [ ] Expose Useful api endpoints
 
