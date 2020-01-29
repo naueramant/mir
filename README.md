@@ -5,4 +5,7 @@
 - [x] Basic Auth auto login
 - [ ] Custom CSS
 - [ ] Custom JS 
+- [ ] Auto refresh if page did not load
 - [ ] Job scheduling
+- [ ] Expose Useful api endpoints
+

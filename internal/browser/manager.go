@@ -11,9 +11,17 @@ import (
 
 type BrowserManager struct {
 	Browser Browser
+	Started bool
+	Paused  bool
 }
 
 func (bm *BrowserManager) Start(c *config.Configuration) {
+	if bm.Started {
+		return
+	}
+
+	bm.Started = true
+
 	bm.Browser = newBrowser()
 
 	if c == nil {
@@ -43,7 +51,17 @@ func (bm *BrowserManager) Start(c *config.Configuration) {
 }
 
 func (bm *BrowserManager) Stop() {
-	bm.Browser.Close()
+	if bm.Started {
+		bm.Browser.Close()
+	}
+}
+
+func (bm *BrowserManager) Pause() {
+	bm.Paused = true
+}
+
+func (bm *BrowserManager) Resume() {
+	bm.Paused = false
 }
 
 func (bm *BrowserManager) showNoTabsScreen() {
