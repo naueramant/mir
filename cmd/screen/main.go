@@ -24,8 +24,8 @@ func main() {
 func initAll() {
 	c, _ = config.Load()
 
-	go initBrowserManager()
-	go initJobSchedular()
+	initBrowserManager()
+	initJobSchedular()
 }
 
 func initBrowserManager() {
@@ -34,9 +34,6 @@ func initBrowserManager() {
 }
 
 func initJobSchedular() {
-	js = jobs.JobScheduler{
-		BrowserManager: bm,
-	}
-
-	js.Start(c)
+	js = jobs.NewJobScheduler(c, bm)
+	js.Start()
 }

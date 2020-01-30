@@ -51,7 +51,7 @@
 
 
         const doBlink = url.searchParams.get("blink");
-        if (doBlink) {
+        if (doBlink == "true") {
             setInterval(() => {
                 const c1 = document.getElementById("msg").style.color;
                 const c2 = document.body.style.backgroundColor;

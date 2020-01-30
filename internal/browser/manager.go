@@ -21,13 +21,7 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 
 	bm.Browser = NewBrowser()
 
-	if c.Syntax == "" {
-		bm.showNoConfigScreen()
-		return bm
-	}
-
 	if len(c.Tabs) == 0 {
-		bm.showNoTabsScreen()
 		return bm
 	}
 
@@ -52,6 +46,16 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 }
 
 func (bm *BrowserManager) Start() {
+	if bm.Config.Syntax == "" {
+		bm.showNoConfigScreen()
+		return
+	}
+
+	if len(bm.Config.Tabs) == 0 {
+		bm.showNoTabsScreen()
+		return
+	}
+
 	bm.startCycle()
 }
 

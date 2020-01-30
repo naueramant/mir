@@ -5,6 +5,6 @@
 - [x] Basic Auth auto login
 - [x] Custom CSS
 - [x] Custom JS 
-- [ ] Job scheduling
+- [x] Job scheduling
 - [ ] Client commands
 - [ ] Expose Useful api endpoints
