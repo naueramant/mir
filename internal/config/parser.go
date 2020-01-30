@@ -11,24 +11,24 @@ const (
 	Filename = "screen.yaml"
 )
 
-func Load() (*Configuration, error) {
+func Load() (Configuration, error) {
 	return readFromFile(Filename)
 }
 
-func readFromFile(path string) (*Configuration, error) {
+func readFromFile(path string) (Configuration, error) {
+	t := Configuration{}
+
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, errors.New("no " + Filename + " file found")
+		return t, errors.New("no " + Filename + " file found")
 	}
-
-	t := Configuration{}
 
 	err = yaml.Unmarshal([]byte(data), &t)
 	if err != nil {
-		return nil, err
+		return t, err
 	}
 
 	err = Validate(t)
 
-	return &t, err
+	return t, err
 }

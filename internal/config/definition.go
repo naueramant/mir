@@ -7,7 +7,7 @@ type Configuration struct {
 
 type Tab struct {
 	URL      string `yaml:"url"validate:"required"`
-	Duration uint64 `yaml:"duration"validate:"required"`
+	Duration uint64 `yaml:"duration,omitempty"`
 	Reload   bool   `yaml:"reload,omitempty"`
 	Auth     Auth   `yaml:"auth,omitempty"validate:"omitempty,dive"`
 	CSS      string `yaml:"css,omitempty"validate:"omitempty,uri"`

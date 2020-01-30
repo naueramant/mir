@@ -11,20 +11,21 @@ import (
 
 type BrowserManager struct {
 	Browser Browser
-	Started bool
-	Paused  bool
+
+	started bool
+	paused  bool
 }
 
-func (bm *BrowserManager) Start(c *config.Configuration) {
-	if bm.Started {
+func (bm *BrowserManager) Start(c config.Configuration) {
+	if bm.started {
 		return
 	}
 
-	bm.Started = true
+	bm.started = true
 
 	bm.Browser = newBrowser()
 
-	if c == nil {
+	if c.Syntax == "" {
 		bm.showNoConfigScreen()
 		return
 	}
@@ -51,17 +52,18 @@ func (bm *BrowserManager) Start(c *config.Configuration) {
 }
 
 func (bm *BrowserManager) Stop() {
-	if bm.Started {
+	if bm.started {
+		bm.started = false
 		bm.Browser.Close()
 	}
 }
 
 func (bm *BrowserManager) Pause() {
-	bm.Paused = true
+	bm.paused = true
 }
 
 func (bm *BrowserManager) Resume() {
-	bm.Paused = false
+	bm.paused = false
 }
 
 func ApplyTabExtras(t Tab, tc config.Tab) {
@@ -86,7 +88,7 @@ func (bm *BrowserManager) showNoConfigScreen() {
 	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/noconfig.html?ip=" + utils.GetLocalIp())
 }
 
-func (bm *BrowserManager) startCycle(c *config.Configuration) {
+func (bm *BrowserManager) startCycle(c config.Configuration) {
 	for {
 		for i, tab := range bm.Browser.Tabs {
 			if c.Tabs[i].Reload {
@@ -97,8 +99,16 @@ func (bm *BrowserManager) startCycle(c *config.Configuration) {
 
 			tab.Focus()
 
+			if c.Tabs[i].Duration == 0 {
+				return
+			}
+
 			delay := time.Duration(c.Tabs[i].Duration)
 			time.Sleep(time.Second * delay)
+
+			if !bm.started {
+				return
+			}
 		}
 	}
 }
