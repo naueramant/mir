@@ -18,22 +18,6 @@ func main() {
 
 	initAll()
 
-	/*
-		err := watcher.Watch(config.Filename, func() {
-			log.Infoln("Reload configuration")
-
-			js.Stop()
-			bm.Stop()
-
-			initAll()
-		})
-
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	*/
-
 	select {} // Do not terminate
 }
 
@@ -45,8 +29,8 @@ func initAll() {
 }
 
 func initBrowserManager() {
-	bm = browser.BrowserManager{}
-	bm.Start(c)
+	bm = browser.NewBrowserManager(c)
+	bm.Start()
 }
 
 func initJobSchedular() {

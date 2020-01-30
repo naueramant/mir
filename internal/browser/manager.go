@@ -11,28 +11,24 @@ import (
 
 type BrowserManager struct {
 	Browser Browser
-
-	started bool
-	paused  bool
+	Config  config.Configuration
 }
 
-func (bm *BrowserManager) Start(c config.Configuration) {
-	if bm.started {
-		return
+func NewBrowserManager(c config.Configuration) BrowserManager {
+	bm := BrowserManager{
+		Config: c,
 	}
 
-	bm.started = true
-
-	bm.Browser = newBrowser()
+	bm.Browser = NewBrowser()
 
 	if c.Syntax == "" {
 		bm.showNoConfigScreen()
-		return
+		return bm
 	}
 
 	if len(c.Tabs) == 0 {
 		bm.showNoTabsScreen()
-		return
+		return bm
 	}
 
 	for _, tabCon := range c.Tabs {
@@ -46,27 +42,32 @@ func (bm *BrowserManager) Start(c config.Configuration) {
 		} else {
 			tab.Navigate(tabCon.URL)
 		}
+
+		bm.applyTabExtras(tab, tabCon)
 	}
 
-	bm.startCycle(c)
+	bm.Browser.Tabs[0].Focus()
+
+	return bm
 }
 
-func (bm *BrowserManager) Stop() {
-	if bm.started {
-		bm.started = false
-		bm.Browser.Close()
-	}
+func (bm *BrowserManager) Start() {
+	bm.startCycle()
+}
+
+func (bm *BrowserManager) Close() {
+	bm.Browser.Close()
 }
 
 func (bm *BrowserManager) Pause() {
-	bm.paused = true
+
 }
 
 func (bm *BrowserManager) Resume() {
-	bm.paused = false
+
 }
 
-func ApplyTabExtras(t Tab, tc config.Tab) {
+func (bm *BrowserManager) applyTabExtras(t Tab, tc config.Tab) {
 	if tc.CSS != "" {
 		cssStr, _ := utils.ReadFileToString(tc.CSS)
 		go t.AddCSS(cssStr)
@@ -88,27 +89,22 @@ func (bm *BrowserManager) showNoConfigScreen() {
 	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/noconfig.html?ip=" + utils.GetLocalIp())
 }
 
-func (bm *BrowserManager) startCycle(c config.Configuration) {
+func (bm *BrowserManager) startCycle() {
 	for {
 		for i, tab := range bm.Browser.Tabs {
-			if c.Tabs[i].Reload {
+			if bm.Config.Tabs[i].Reload {
 				tab.Reload()
+				bm.applyTabExtras(tab, bm.Config.Tabs[i])
 			}
-
-			ApplyTabExtras(tab, c.Tabs[i])
 
 			tab.Focus()
 
-			if c.Tabs[i].Duration == 0 {
+			if bm.Config.Tabs[i].Duration == 0 {
 				return
 			}
 
-			delay := time.Duration(c.Tabs[i].Duration)
+			delay := time.Duration(bm.Config.Tabs[i].Duration)
 			time.Sleep(time.Second * delay)
-
-			if !bm.started {
-				return
-			}
 		}
 	}
 }

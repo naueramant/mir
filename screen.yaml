@@ -1,7 +1,3 @@
 syntax: v1
 tabs: 
-  - url: https://grafana.europe.wiseflow.io/playlists/play/2?kiosk
-    duration: 30000000    
-    auth:
-      username: grafana
-      password: 3amQ5uH7Jzd4
+  - url: "https://xkcd.com"
