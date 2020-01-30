@@ -64,6 +64,18 @@ func (bm *BrowserManager) Resume() {
 	bm.Paused = false
 }
 
+func ApplyTabExtras(t Tab, tc config.Tab) {
+	if tc.CSS != "" {
+		cssStr, _ := utils.ReadFileToString(tc.CSS)
+		go t.AddCSS(cssStr)
+	}
+
+	if tc.JS != "" {
+		jsStr, _ := utils.ReadFileToString(tc.JS)
+		go t.AddJS(jsStr)
+	}
+}
+
 func (bm *BrowserManager) showNoTabsScreen() {
 	t := bm.Browser.NewTab()
 	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/notabs.html?ip=" + utils.GetLocalIp())
@@ -77,15 +89,15 @@ func (bm *BrowserManager) showNoConfigScreen() {
 func (bm *BrowserManager) startCycle(c *config.Configuration) {
 	for {
 		for i, tab := range bm.Browser.Tabs {
-			tabCon := c.Tabs[i]
-
-			if tabCon.Reload {
+			if c.Tabs[i].Reload {
 				tab.Reload()
 			}
 
+			ApplyTabExtras(tab, c.Tabs[i])
+
 			tab.Focus()
 
-			delay := time.Duration(tabCon.Duration)
+			delay := time.Duration(c.Tabs[i].Duration)
 			time.Sleep(time.Second * delay)
 		}
 	}

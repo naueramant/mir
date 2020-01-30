@@ -1,7 +1,2 @@
 syntax: v1
-tabs: 
-  - url: https://google.com/
-    duration: 10
-  - url: https://www.unixtimestamp.com/
-    reload: true
-    duration: 10
+tabs: []

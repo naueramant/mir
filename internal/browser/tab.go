@@ -6,6 +6,7 @@ import (
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/cdproto/page"
+	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 )
 
@@ -44,9 +45,19 @@ func (t *Tab) NavigateWithBasicAuth(url string, creds BasicAuthCredentials) {
 }
 
 func (t *Tab) AddCSS(css string) {
-
+	script := `
+	(() => {
+		const style = document.createElement('style');
+		style.type = 'text/css';
+		style.appendChild(document.createTextNode(` + "`" + css + "`" + `));
+		document.head.appendChild(style);
+	})()
+	`
+	var executed *runtime.RemoteObject
+	chromedp.Run(t.Context, chromedp.EvaluateAsDevTools(script, &executed))
 }
 
-func (t *Tab) AddJS(js string) {
-
+func (t *Tab) AddJS(script string) {
+	var executed *runtime.RemoteObject
+	chromedp.Run(t.Context, chromedp.EvaluateAsDevTools(script, &executed))
 }
