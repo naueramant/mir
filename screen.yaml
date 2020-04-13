@@ -1,5 +1,5 @@
 syntax: v1
+
 tabs:
   - url: https://xkcd.com/
-    duration: 300
-    reload: false
+  

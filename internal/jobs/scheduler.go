@@ -4,6 +4,7 @@ import (
 	"github.com/naueramant/mir/internal/browser"
 	"github.com/naueramant/mir/internal/config"
 	"github.com/robfig/cron/v3"
+	"github.com/sirupsen/logrus"
 )
 
 type JobScheduler struct {
@@ -27,10 +28,13 @@ func (s *JobScheduler) Start() {
 		})
 	}
 
+	logrus.Infof("Scheduled %d job(s)", len(s.Config.Jobs))
+
 	s.Cron.Start()
 }
 
 func (s *JobScheduler) Stop() {
+	logrus.Infoln("Stopping job schedular")
 	s.Cron.Stop()
 }
 

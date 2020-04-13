@@ -10,9 +10,11 @@ require (
 	github.com/gobuffalo/envy v1.8.1 // indirect
 	github.com/gobuffalo/packr v1.30.1
 	github.com/leodido/go-urn v1.2.0 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/radovskyb/watcher v1.0.7
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rogpeppe/go-internal v1.5.2 // indirect
+	github.com/sirupsen/logrus v1.4.2
 	golang.org/x/sys v0.0.0-20200124204421-9fbb57f87de9 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0

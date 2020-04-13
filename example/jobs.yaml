@@ -1,0 +1,9 @@
+syntax: v1
+name: Screen 1
+
+jobs:
+  - action: util_flash_message
+    when: 1 * * * * # Flash text every minute
+    data:
+      message: Test text!
+      duration: 10

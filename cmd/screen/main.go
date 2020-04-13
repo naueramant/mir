@@ -5,7 +5,8 @@ import (
 	"github.com/naueramant/mir/internal/config"
 	"github.com/naueramant/mir/internal/jobs"
 	"github.com/naueramant/mir/internal/server"
-	"github.com/naueramant/mir/internal/watcher"
+	"github.com/naueramant/mir/internal/utils"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -17,7 +18,9 @@ var (
 func main() {
 	go server.Start()
 
-	go watcher.Watch("./screen.yaml", func() {
+	go utils.Watch("./screen.yaml", func() {
+		logrus.Infoln("Configuration file changed")
+
 		stop()
 		start()
 	})
@@ -28,7 +31,10 @@ func main() {
 }
 
 func start() {
-	c, _ = config.Load()
+	c, err := config.Load()
+	if err != nil {
+		logrus.Error(err)
+	}
 
 	bm = browser.NewBrowserManager(c)
 	go bm.Start()

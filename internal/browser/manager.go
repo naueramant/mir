@@ -7,6 +7,7 @@ import (
 	"github.com/naueramant/mir/internal/config"
 	"github.com/naueramant/mir/internal/server"
 	"github.com/naueramant/mir/internal/utils"
+	"github.com/sirupsen/logrus"
 )
 
 type BrowserManager struct {
@@ -18,6 +19,8 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 	bm := BrowserManager{
 		Config: c,
 	}
+
+	logrus.Infoln("Spawning chrome browser")
 
 	bm.Browser = NewBrowser()
 
@@ -42,17 +45,21 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 
 	bm.Browser.Tabs[0].Focus()
 
+	logrus.Infof("Opened %d tab(s)", len(c.Tabs))
+
 	return bm
 }
 
 func (bm *BrowserManager) Start() {
 	if bm.Config.Syntax == "" {
 		bm.showNoConfigScreen()
+		logrus.Infoln("No configuration file found")
 		return
 	}
 
 	if len(bm.Config.Tabs) == 0 {
 		bm.showNoTabsScreen()
+		logrus.Infoln("No tabs configured")
 		return
 	}
 
@@ -60,6 +67,7 @@ func (bm *BrowserManager) Start() {
 }
 
 func (bm *BrowserManager) Close() {
+	logrus.Infoln("Closing browser")
 	bm.Browser.Close()
 }
 
