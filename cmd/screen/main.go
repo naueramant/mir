@@ -5,6 +5,7 @@ import (
 	"github.com/naueramant/mir/internal/config"
 	"github.com/naueramant/mir/internal/jobs"
 	"github.com/naueramant/mir/internal/server"
+	"github.com/naueramant/mir/internal/watcher"
 )
 
 var (
@@ -16,24 +17,27 @@ var (
 func main() {
 	go server.Start()
 
-	initAll()
+	go watcher.Watch("./screen.yaml", func() {
+		stop()
+		start()
+	})
+
+	start()
 
 	select {} // Do not terminate
 }
 
-func initAll() {
+func start() {
 	c, _ = config.Load()
 
-	initBrowserManager()
-	initJobSchedular()
-}
-
-func initBrowserManager() {
 	bm = browser.NewBrowserManager(c)
-	bm.Start()
+	go bm.Start()
+
+	js = jobs.NewJobScheduler(c, bm)
+	go js.Start()
 }
 
-func initJobSchedular() {
-	js = jobs.NewJobScheduler(c, bm)
-	js.Start()
+func stop() {
+	bm.Close()
+	js.Stop()
 }

@@ -1,37 +1,62 @@
 package watcher
 
 import (
-	"errors"
-	"fmt"
-	"os"
 	"time"
 
 	"github.com/radovskyb/watcher"
 )
 
-func Watch(file string, changedFunc func()) error {
-	w := watcher.New()
+func Watch(file string, changedFunc func()) {
+	var w *watcher.Watcher
 	var err error
 
-	w.FilterOps(watcher.Write)
+	var start func()
+	var recover func()
+	var eventLoop func()
 
-	go func() {
+	retrigger := false
+
+	recover = func() {
+		retrigger = true
+		time.Sleep(time.Millisecond * 500)
+		start()
+	}
+
+	eventLoop = func() {
 		for {
 			select {
 			case <-w.Event:
-				changedFunc()
+				go changedFunc()
 			case <-w.Error:
-				fmt.Println("No such file " + file)
-				os.Exit(1)
+				go changedFunc()
+				recover()
 			case <-w.Closed:
-				return
+				go changedFunc()
+				recover()
 			}
 		}
-	}()
-
-	if err = w.Add(file); err != nil {
-		return errors.New("No such file " + file)
 	}
 
-	return w.Start(time.Millisecond * 100)
+	start = func() {
+		w = watcher.New()
+		w.FilterOps(watcher.Write, watcher.Remove, watcher.Rename, watcher.Move, watcher.Create)
+
+		err = w.Add(file)
+		if err != nil {
+			recover()
+		}
+
+		go eventLoop()
+
+		if retrigger {
+			changedFunc()
+		}
+
+		err = w.Start(time.Millisecond * 100)
+		if err != nil {
+			recover()
+		}
+	}
+
+	start()
 }

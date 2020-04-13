@@ -22,7 +22,9 @@ func NewJobScheduler(config config.Configuration, browserManager browser.Browser
 
 func (s *JobScheduler) Start() {
 	for _, j := range s.Config.Jobs {
-		s.schedule(j)
+		s.Cron.AddFunc(j.When, func() {
+			s.run(j)
+		})
 	}
 
 	s.Cron.Start()
@@ -30,12 +32,6 @@ func (s *JobScheduler) Start() {
 
 func (s *JobScheduler) Stop() {
 	s.Cron.Stop()
-}
-
-func (s *JobScheduler) schedule(j config.Job) {
-	s.Cron.AddFunc(j.When, func() {
-		s.run(j)
-	})
 }
 
 func (s *JobScheduler) run(j config.Job) {

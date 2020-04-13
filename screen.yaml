@@ -1,10 +1,5 @@
 syntax: v1
-tabs: []
-jobs:
-  - type: message
-    when: "* * * * *"
-    data:
-      duration: 10
-      message: "Frokost!"
-      blink: true
-      fontSize: 100
+tabs:
+  - url: https://xkcd.com/
+    duration: 300
+    reload: false

@@ -12,13 +12,9 @@ const (
 )
 
 func Load() (Configuration, error) {
-	return readFromFile(Filename)
-}
-
-func readFromFile(path string) (Configuration, error) {
 	t := Configuration{}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := ioutil.ReadFile(Filename)
 	if err != nil {
 		return t, errors.New("no " + Filename + " file found")
 	}
