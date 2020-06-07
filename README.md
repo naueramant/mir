@@ -6,5 +6,4 @@
 - [x] Custom CSS
 - [x] Custom JS 
 - [x] Job scheduling
-- [ ] Client commands
 - [ ] Expose Useful api endpoints

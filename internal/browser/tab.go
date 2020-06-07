@@ -38,7 +38,9 @@ func (t *Tab) NavigateWithBasicAuth(url string, creds BasicAuthCredentials) {
 	x := base64.StdEncoding.EncodeToString([]byte(creds.Username + ":" + creds.Password))
 	headers := network.Headers{"Authorization": "Basic " + x}
 
-	chromedp.Run(t.Context, network.Enable(),
+	chromedp.Run(
+		t.Context,
+		network.Enable(),
 		network.SetExtraHTTPHeaders(network.Headers(headers)),
 		chromedp.Navigate(url),
 	)
@@ -54,10 +56,16 @@ func (t *Tab) AddCSS(css string) {
 	})()
 	`
 	var executed *runtime.RemoteObject
-	chromedp.Run(t.Context, chromedp.EvaluateAsDevTools(script, &executed))
+	chromedp.Run(
+		t.Context,
+		chromedp.EvaluateAsDevTools(script, &executed),
+	)
 }
 
 func (t *Tab) AddJS(script string) {
 	var executed *runtime.RemoteObject
-	chromedp.Run(t.Context, chromedp.EvaluateAsDevTools(script, &executed))
+	chromedp.Run(
+		t.Context,
+		chromedp.EvaluateAsDevTools(script, &executed),
+	)
 }

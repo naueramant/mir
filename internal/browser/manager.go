@@ -32,10 +32,13 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 		tab := bm.Browser.NewTab()
 
 		if tabCon.Auth.Username != "" && tabCon.Auth.Password != "" {
-			tab.NavigateWithBasicAuth(tabCon.URL, BasicAuthCredentials{
-				Username: tabCon.Auth.Username,
-				Password: tabCon.Auth.Password,
-			})
+			tab.NavigateWithBasicAuth(
+				tabCon.URL,
+				BasicAuthCredentials{
+					Username: tabCon.Auth.Username,
+					Password: tabCon.Auth.Password,
+				},
+			)
 		} else {
 			tab.Navigate(tabCon.URL)
 		}
