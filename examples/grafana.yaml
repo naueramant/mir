@@ -1,0 +1,15 @@
+syntax: v1
+
+tabs: 
+  - url: http://localhost:8080/playlists/play/4?kiosk
+    auth:
+      username: username
+      password: password
+
+jobs:
+  - type: command
+    when: "0 0 3 * *"
+    data:
+      command: sudo
+      args:
+        - reboot

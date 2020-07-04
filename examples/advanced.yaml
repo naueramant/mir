@@ -1,5 +1,4 @@
 syntax: v1
-name: Screen 1
 
 tabs:
   - url: https://xkcd.com/
@@ -12,22 +11,9 @@ tabs:
     js: scripts.js
 
 jobs:
-  - action: system_turn_off_screen
-    when: 5 4 * * *
-
-  - action: system_turn_on_screen
-    when: 5 4 * * *
-
-  - action: system_restart
-    when: 5 4 * * *
-
-  - action: util_flash_message
-    when: 5 4 * * *
+  - type: command
+    when: "0 0 3 * *"
     data:
-      message: Frokost!
-      duration: 60
-
-  - action: system_command
-    when: 5 4 * * *
-    data:
-      command: ./script.sh
+      command: sudo
+      args:
+        - reboot

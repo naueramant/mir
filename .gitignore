@@ -7,7 +7,7 @@
 *.dylib
 *.test
 *.out
-*.yaml
-*.yml
+./*.yaml
+./*.yml
 main
 dist

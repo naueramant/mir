@@ -21,12 +21,12 @@ type Auth struct {
 }
 
 type Job struct {
-	Type string `yaml:"type"validate:"required"`
-	When string `yaml:"when"validate:"required"`
-	Data Data   `yaml:"data,omitempty"validate:"omitempty,dive"`
+	Type    string  `yaml:"type"validate:"required"`
+	When    string  `yaml:"when"validate:"required"`
+	Options Options `yaml:"options,omitempty"validate:"omitempty,dive"`
 }
 
-type Data struct {
+type Options struct {
 	// Command
 	Command string   `yaml:"command"`
 	Args    []string `yaml:"args"`

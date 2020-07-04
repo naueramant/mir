@@ -17,23 +17,23 @@ func (s *JobScheduler) runFlashMessage(j config.Job) {
 	u, _ := url.Parse("localhost:" + strconv.Itoa(server.Port) + "/message.html")
 	q, _ := url.ParseQuery(u.RawQuery)
 
-	q.Add("msg", j.Data.Message)
-	if j.Data.FontSize != 0 {
-		q.Add("fontsize", strconv.Itoa(int(j.Data.FontSize)))
+	q.Add("msg", j.Options.Message)
+	if j.Options.FontSize != 0 {
+		q.Add("fontsize", strconv.Itoa(int(j.Options.FontSize)))
 	}
-	if j.Data.TextColor != "" {
-		q.Add("textcolor", j.Data.TextColor)
+	if j.Options.TextColor != "" {
+		q.Add("textcolor", j.Options.TextColor)
 	}
-	if j.Data.BackgroundColor != "" {
-		q.Add("bgcolor", j.Data.BackgroundColor)
+	if j.Options.BackgroundColor != "" {
+		q.Add("bgcolor", j.Options.BackgroundColor)
 	}
-	q.Add("blink", strconv.FormatBool(j.Data.Blink))
+	q.Add("blink", strconv.FormatBool(j.Options.Blink))
 
 	u.RawQuery = q.Encode()
 
 	tab.Navigate(u.String())
 
-	time.Sleep(time.Second * time.Duration(int(j.Data.Duration)))
+	time.Sleep(time.Second * time.Duration(int(j.Options.Duration)))
 
 	tab.Close()
 	s.BrowserManager.Resume()
@@ -43,14 +43,14 @@ func (s *JobScheduler) runTab(j config.Job) {
 	s.BrowserManager.Pause()
 	tab := s.BrowserManager.Browser.NewTab()
 
-	tab.Navigate(j.Data.URL)
+	tab.Navigate(j.Options.URL)
 
-	time.Sleep(time.Second * time.Duration(int(j.Data.Duration)))
+	time.Sleep(time.Second * time.Duration(int(j.Options.Duration)))
 
 	tab.Close()
 	s.BrowserManager.Resume()
 }
 
 func (s *JobScheduler) runSystemCommand(j config.Job) {
-	exec.Command(j.Data.Command, j.Data.Args...).Run()
+	exec.Command(j.Options.Command, j.Options.Args...).Run()
 }

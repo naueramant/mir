@@ -1,0 +1,12 @@
+syntax: v1
+
+jobs:
+  - action: message
+    when: 1 * * * * # Flash text every minute
+    options:
+      message: Test text!
+      duration: 10
+      textColor: "#000"
+      backgroundColor: "#fff"
+      fontSize: 32
+      blink: true
