@@ -9,5 +9,6 @@
 *.out
 ./*.yaml
 ./*.yml
+*packr.go
 main
 dist

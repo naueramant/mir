@@ -20,6 +20,9 @@ jobs:
         with:
           go-version: 1.14
       -
+        name: Add packr
+        run: go get -u github.com/gobuffalo/packr/packr
+      -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
