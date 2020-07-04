@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+
 	"github.com/naueramant/mir/internal/browser"
 	"github.com/naueramant/mir/internal/config"
 	"github.com/naueramant/mir/internal/jobs"
@@ -13,12 +15,18 @@ var (
 	c  config.Configuration
 	bm browser.BrowserManager
 	js jobs.JobScheduler
+
+	configPath = flag.String("config", "screen.yaml", "path to screen configuration")
 )
 
 func main() {
+	flag.Parse()
+
+	logrus.Infof("Using configuration file %s", *configPath)
+
 	go server.Start()
 
-	go utils.Watch("./screen.yaml", func() {
+	go utils.Watch(*configPath, func() {
 		logrus.Infoln("Configuration file changed")
 
 		stop()
@@ -31,7 +39,7 @@ func main() {
 }
 
 func start() {
-	c, err := config.Load()
+	c, err := config.Load(*configPath)
 	if err != nil {
 		logrus.Error(err)
 	}
