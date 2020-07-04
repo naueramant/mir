@@ -94,7 +94,7 @@ The _jobs_ field is an array of _job_ configurations:
 | name    | type     | usage                      |
 | ------- | -------- | -------------------------- |
 | command | string   | Command to run             |
-| args    | []string | Array of command arguments |
+| args    | string[] | Array of command arguments |
 
 **Type**: _tab_
 
