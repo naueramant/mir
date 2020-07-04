@@ -101,7 +101,7 @@ The _jobs_ field is an array of _job_ configurations:
 | name     | type     | usage                                                |
 | -------- | -------- | ---------------------------------------------------- |
 | url      | string   | The URL which the tab will load                      |
-| duration | duration | Duration in seconds of which the tab will be visible |
+| duration | number   | Duration in seconds of which the tab will be visible |
 
 **Type**: _message_
 
