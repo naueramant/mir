@@ -23,6 +23,9 @@ jobs:
         name: Add packr
         run: go get -u github.com/gobuffalo/packr/packr
       -
+        name: Reset go mod
+        run: git reset --hard
+      -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
