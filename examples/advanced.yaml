@@ -13,7 +13,7 @@ tabs:
 jobs:
   - type: command
     when: "0 0 3 * *"
-    data:
+    options:
       command: sudo
       args:
         - reboot
