@@ -4,7 +4,10 @@ import (
 	"context"
 	"log"
 
+	"github.com/chromedp/cdproto/network"
+	"github.com/chromedp/cdproto/target"
 	"github.com/chromedp/chromedp"
+	"github.com/sirupsen/logrus"
 )
 
 type Browser struct {
@@ -38,6 +41,20 @@ func (b *Browser) NewTab() Tab {
 		Browser: *b,
 		Context: ctx,
 	}
+
+	chromedp.ListenTarget(ctx, func(ev interface{}) {
+		if e, ok := ev.(*network.EventLoadingFailed); ok {
+			if e.Type == network.ResourceTypeDocument {
+				logrus.Infof("Tab failed to load, reloading in %v seconds\n", FailedLoadReloadDelay.Seconds())
+
+				go t.delayedReload()
+			}
+		}
+
+		if _, ok := ev.(*target.EventTargetDestroyed); ok {
+			b.removeTab(t)
+		}
+	})
 
 	t.Close = func() {
 		b.removeTab(t)

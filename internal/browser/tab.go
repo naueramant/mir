@@ -3,6 +3,7 @@ package browser
 import (
 	"context"
 	"encoding/base64"
+	"time"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/cdproto/page"
@@ -10,11 +11,17 @@ import (
 	"github.com/chromedp/chromedp"
 )
 
+var (
+	FailedLoadReloadDelay = time.Second * 10
+)
+
 type Tab struct {
 	Browser Browser
 	Context context.Context
 
 	Close func()
+
+	isReloading bool
 }
 
 type BasicAuthCredentials struct {
@@ -31,7 +38,7 @@ func (t *Tab) Reload() {
 }
 
 func (t *Tab) Navigate(url string) {
-	chromedp.Run(t.Context, chromedp.Navigate(url))
+	chromedp.Run(t.Context, network.Enable(), chromedp.Navigate(url))
 }
 
 func (t *Tab) NavigateWithBasicAuth(url string, creds BasicAuthCredentials) {
@@ -68,4 +75,13 @@ func (t *Tab) AddJS(script string) {
 		t.Context,
 		chromedp.EvaluateAsDevTools(script, &executed),
 	)
+}
+
+func (t *Tab) delayedReload() {
+	if !t.isReloading {
+		t.isReloading = true
+		time.Sleep(FailedLoadReloadDelay)
+		t.isReloading = false
+		t.Reload()
+	}
 }

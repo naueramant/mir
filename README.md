@@ -11,6 +11,7 @@ YAML configurable web dashboard viewer written in Go
 - Cron jobs
   - System commands
   - Message flashing
+- Detect failed page loads and retry
 
 ## About
 
