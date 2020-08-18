@@ -1,0 +1,13 @@
+syntax: v1
+
+tabs:
+  - url: https://xkcd.com/
+
+
+jobs:
+  - type: command
+    when: "* * * * *"
+    options:
+      command: notify-send
+      args:
+        - "hej"

@@ -22,9 +22,9 @@ func NewJobScheduler(config config.Configuration, browserManager browser.Browser
 }
 
 func (s *JobScheduler) Start() {
-	for _, j := range s.Config.Jobs {
+	for i, j := range s.Config.Jobs {
 		s.Cron.AddFunc(j.When, func() {
-			s.run(j)
+			s.run(i, j)
 		})
 	}
 
@@ -38,7 +38,9 @@ func (s *JobScheduler) Stop() {
 	s.Cron.Stop()
 }
 
-func (s *JobScheduler) run(j config.Job) {
+func (s *JobScheduler) run(i int, j config.Job) {
+	logrus.Infof("Executing job %d", i)
+
 	switch j.Type {
 	case "message":
 		s.runFlashMessage(j)
