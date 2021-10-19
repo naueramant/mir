@@ -3,6 +3,8 @@ package browser
 import (
 	"context"
 	"log"
+	"os"
+	"path"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/cdproto/target"
@@ -24,6 +26,7 @@ func NewBrowser() Browser {
 		chromedp.Flag("disable-extensions", true),
 		chromedp.Flag("start-fullscreen", true),
 		chromedp.Flag("disable-infobars", true),
+		chromedp.Flag("user-data-dir", path.Join(os.TempDir(), "chromium")),
 	)
 
 	allocCtx, close := chromedp.NewExecAllocator(context.Background(), opts...)
