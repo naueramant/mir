@@ -11,7 +11,7 @@
 ./*.yml
 *packr.go
 main
-dist
+dist/
 
 # Test assets
 *.js
