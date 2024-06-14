@@ -9,25 +9,22 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          fetch-depth: 0
-      -
-        name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.14
-      -
-        name: Add packr
+          go-version: 1.21
+          
+      - name: Add packr
         run: go get -u github.com/gobuffalo/packr/packr
-      -
-        name: Reset go mod
+
+      - name: Reset go mod
         run: git reset --hard
-      -
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
         with:
           version: latest
           args: release --rm-dist
