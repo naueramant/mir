@@ -2,7 +2,6 @@ package browser
 
 import (
 	"context"
-	"log"
 	"os"
 	"path"
 
@@ -14,7 +13,7 @@ import (
 
 type Browser struct {
 	Context context.Context
-	Tabs    []Tab
+	Tabs    []*Tab
 
 	Close func()
 }
@@ -27,6 +26,7 @@ func NewBrowser() Browser {
 		chromedp.Flag("start-fullscreen", true),
 		chromedp.Flag("disable-infobars", true),
 		chromedp.Flag("user-data-dir", path.Join(os.TempDir(), "chromium")),
+		chromedp.Flag("incognito", true),
 	)
 
 	allocCtx, close := chromedp.NewExecAllocator(context.Background(), opts...)
@@ -37,15 +37,10 @@ func NewBrowser() Browser {
 	}
 }
 
-func (b *Browser) NewTab() Tab {
-	ctx, close := chromedp.NewContext(b.Context, chromedp.WithLogf(log.Printf))
+func (b *Browser) NewTab() *Tab {
+	t := newTab(b)
 
-	t := Tab{
-		Browser: *b,
-		Context: ctx,
-	}
-
-	chromedp.ListenTarget(ctx, func(ev interface{}) {
+	chromedp.ListenTarget(t.Context, func(ev interface{}) {
 		if e, ok := ev.(*network.EventLoadingFailed); ok {
 			if e.Type == network.ResourceTypeDocument {
 				logrus.Infof("Tab failed to load, reloading in %v seconds\n", FailedLoadReloadDelay.Seconds())
@@ -61,7 +56,7 @@ func (b *Browser) NewTab() Tab {
 
 	t.Close = func() {
 		b.removeTab(t)
-		close()
+		t.Close()
 	}
 
 	b.Tabs = append(b.Tabs, t)
@@ -69,7 +64,7 @@ func (b *Browser) NewTab() Tab {
 	return t
 }
 
-func (b *Browser) removeTab(t Tab) {
+func (b *Browser) removeTab(t *Tab) {
 	for i, tab := range b.Tabs {
 		if tab.Context == t.Context {
 			b.Tabs = append(b.Tabs[:i], b.Tabs[i+1:]...)

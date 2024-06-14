@@ -11,8 +11,8 @@ type Tab struct {
 	Duration uint64 `yaml:"duration,omitempty"`
 	Reload   bool   `yaml:"reload,omitempty"`
 	Auth     Auth   `yaml:"auth,omitempty"validate:"omitempty,dive"`
-	CSS      string `yaml:"css,omitempty"validate:"omitempty,uri"`
-	JS       string `yaml:"js,omitempty"validate:"omitempty,uri"`
+	CSS      string `yaml:"css,omitempty"validate:"omitempty,file"`
+	JS       string `yaml:"js,omitempty"validate:"omitempty,file"`
 }
 
 type Auth struct {

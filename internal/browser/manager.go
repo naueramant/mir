@@ -57,12 +57,14 @@ func (bm *BrowserManager) Start() {
 	if bm.Config.Syntax == "" {
 		bm.showNoConfigScreen()
 		logrus.Infoln("No configuration file found")
+
 		return
 	}
 
 	if len(bm.Config.Tabs) == 0 {
 		bm.showNoTabsScreen()
 		logrus.Infoln("No tabs configured")
+
 		return
 	}
 
@@ -75,22 +77,31 @@ func (bm *BrowserManager) Close() {
 }
 
 func (bm *BrowserManager) Pause() {
-
+	// TODO: implement
 }
 
 func (bm *BrowserManager) Resume() {
-
+	// TODO: implement
 }
 
-func (bm *BrowserManager) applyTabExtras(t Tab, tc config.Tab) {
+func (bm *BrowserManager) applyTabExtras(t *Tab, tc config.Tab) {
 	if tc.CSS != "" {
-		cssStr, _ := utils.ReadFileToString(tc.CSS)
-		go t.AddCSS(cssStr)
+		cssStr, err := utils.ReadFileToString(tc.CSS)
+		if err != nil {
+			logrus.Errorln("Failed to read CSS file", err)
+		} else {
+			go t.SetCSS(cssStr)
+		}
 	}
 
 	if tc.JS != "" {
-		jsStr, _ := utils.ReadFileToString(tc.JS)
-		go t.AddJS(jsStr)
+		jsStr, err := utils.ReadFileToString(tc.JS)
+		if err != nil {
+			logrus.Errorln("Failed to read JS file", err)
+		} else {
+			go t.SetJS(jsStr)
+		}
+
 	}
 }
 
@@ -109,6 +120,7 @@ func (bm *BrowserManager) startCycle() {
 		for i, tab := range bm.Browser.Tabs {
 			if bm.Config.Tabs[i].Reload {
 				tab.Reload()
+
 				bm.applyTabExtras(tab, bm.Config.Tabs[i])
 			}
 

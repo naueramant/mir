@@ -3,13 +3,12 @@ package config
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/go-playground/validator.v9"
 	"strings"
+
+	"gopkg.in/go-playground/validator.v9"
 )
 
-var (
-	syntaxes = []string{"v1"}
-)
+var syntaxes = []string{"v1"}
 
 func Validate(t Configuration) error {
 	validate := validator.New()
@@ -17,7 +16,6 @@ func Validate(t Configuration) error {
 	validate.RegisterValidation("syntax", validateSyntax)
 
 	err := validate.Struct(t)
-
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
 			switch err.Field() {
