@@ -12,3 +12,7 @@
 *packr.go
 main
 dist
+
+# Test assets
+*.js
+*.css
