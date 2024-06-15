@@ -1,9 +1,5 @@
 version: 2
 
-before:
-  hooks:
-    - packr
-
 builds:
   - goos:
       - linux
