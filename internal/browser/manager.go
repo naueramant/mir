@@ -1,23 +1,25 @@
 package browser
 
 import (
-	"strconv"
+	"fmt"
 	"time"
 
+	"github.com/naueramant/mir/internal/assets"
 	"github.com/naueramant/mir/internal/config"
-	"github.com/naueramant/mir/internal/server"
 	"github.com/naueramant/mir/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
 type BrowserManager struct {
-	Browser Browser
-	Config  config.Configuration
+	Browser      *Browser
+	Config       *config.Configuration
+	AssetsServer *assets.Server
 }
 
-func NewBrowserManager(c config.Configuration) BrowserManager {
+func NewBrowserManager(c *config.Configuration, as *assets.Server) *BrowserManager {
 	bm := BrowserManager{
-		Config: c,
+		Config:       c,
+		AssetsServer: as,
 	}
 
 	logrus.Infoln("Spawning chrome browser")
@@ -25,7 +27,7 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 	bm.Browser = NewBrowser()
 
 	if len(c.Tabs) == 0 {
-		return bm
+		return &bm
 	}
 
 	for _, tabCon := range c.Tabs {
@@ -50,7 +52,7 @@ func NewBrowserManager(c config.Configuration) BrowserManager {
 
 	logrus.Infof("Opened %d tab(s)", len(c.Tabs))
 
-	return bm
+	return &bm
 }
 
 func (bm *BrowserManager) Start() {
@@ -107,12 +109,26 @@ func (bm *BrowserManager) applyTabExtras(t *Tab, tc config.Tab) {
 
 func (bm *BrowserManager) showNoTabsScreen() {
 	t := bm.Browser.NewTab()
-	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/notabs.html?ip=" + utils.GetLocalIp())
+
+	url := fmt.Sprintf(
+		"%s/static/notabs.html?ip=%s",
+		bm.AssetsServer.Host(),
+		utils.GetLocalIp(),
+	)
+
+	t.Navigate(url)
 }
 
 func (bm *BrowserManager) showNoConfigScreen() {
 	t := bm.Browser.NewTab()
-	t.Navigate("localhost:" + strconv.Itoa(server.Port) + "/noconfig.html?ip=" + utils.GetLocalIp())
+
+	url := fmt.Sprintf(
+		"%s/static/noconfig.html?ip=%s",
+		bm.AssetsServer.Host(),
+		utils.GetLocalIp(),
+	)
+
+	t.Navigate(url)
 }
 
 func (bm *BrowserManager) startCycle() {

@@ -1,6 +1,7 @@
 package jobs
 
 import (
+	"github.com/naueramant/mir/internal/assets"
 	"github.com/naueramant/mir/internal/browser"
 	"github.com/naueramant/mir/internal/config"
 	"github.com/robfig/cron/v3"
@@ -8,14 +9,16 @@ import (
 )
 
 type JobScheduler struct {
-	BrowserManager browser.BrowserManager
-	Config         config.Configuration
+	BrowserManager *browser.BrowserManager
+	AssetsServer   *assets.Server
+	Config         *config.Configuration
 	Cron           *cron.Cron
 }
 
-func NewJobScheduler(config config.Configuration, browserManager browser.BrowserManager) JobScheduler {
-	return JobScheduler{
+func NewJobScheduler(config *config.Configuration, browserManager *browser.BrowserManager, assetsServer *assets.Server) *JobScheduler {
+	return &JobScheduler{
 		BrowserManager: browserManager,
+		AssetsServer:   assetsServer,
 		Config:         config,
 		Cron:           cron.New(),
 	}

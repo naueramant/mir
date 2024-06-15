@@ -18,7 +18,7 @@ type Browser struct {
 	Close func()
 }
 
-func NewBrowser() Browser {
+func NewBrowser() *Browser {
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("headless", false),
 		chromedp.Flag("enable-automation", false),
@@ -31,7 +31,7 @@ func NewBrowser() Browser {
 
 	allocCtx, close := chromedp.NewExecAllocator(context.Background(), opts...)
 
-	return Browser{
+	return &Browser{
 		Context: allocCtx,
 		Close:   close,
 	}

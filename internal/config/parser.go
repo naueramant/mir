@@ -7,20 +7,20 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func Load(filename string) (Configuration, error) {
-	t := Configuration{}
+func Load(filename string) (*Configuration, error) {
+	c := Configuration{}
 
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return t, errors.Wrap(err, "Failed to load configuration file")
+		return &c, errors.Wrap(err, "Failed to load configuration file")
 	}
 
-	err = yaml.Unmarshal([]byte(data), &t)
+	err = yaml.Unmarshal([]byte(data), &c)
 	if err != nil {
-		return t, errors.Wrap(err, "Failed to unmarshal configuration file")
+		return &c, errors.Wrap(err, "Failed to unmarshal configuration file")
 	}
 
-	err = Validate(t)
+	err = Validate(c)
 
-	return t, errors.Wrap(err, "Configuration file invalid")
+	return &c, errors.Wrap(err, "Configuration file invalid")
 }

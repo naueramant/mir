@@ -1,20 +1,23 @@
 package jobs
 
 import (
+	"fmt"
 	"net/url"
 	"os/exec"
 	"strconv"
 	"time"
 
 	"github.com/naueramant/mir/internal/config"
-	"github.com/naueramant/mir/internal/server"
 )
 
 func (s *JobScheduler) runFlashMessage(j config.Job) {
 	s.BrowserManager.Pause()
 	tab := s.BrowserManager.Browser.NewTab()
 
-	u, _ := url.Parse("localhost:" + strconv.Itoa(server.Port) + "/message.html")
+	u, _ := url.Parse(fmt.Sprintf(
+		"%s/static/message.html",
+		s.AssetsServer.Host(),
+	))
 	q, _ := url.ParseQuery(u.RawQuery)
 
 	q.Add("msg", j.Options.Message)
